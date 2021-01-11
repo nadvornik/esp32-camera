@@ -200,19 +200,22 @@ static int skip_frame()
     if (s_state == NULL) {
         return -1;
     }
+    ESP_LOGV(TAG, "skip_frame Waiting for positive edge 1 on VSYNC");
     int64_t st_t = esp_timer_get_time();
     while (_gpio_get_level(s_state->config.pin_vsync) == 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 30000000LL){
             goto timeout;
         }
     }
+    ESP_LOGV(TAG, "skip_frame Waiting for negative edge on VSYNC");
     while (_gpio_get_level(s_state->config.pin_vsync) != 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 30000000LL){
             goto timeout;
         }
     }
+    ESP_LOGV(TAG, "skip_frame Waiting for positive edge 2 on VSYNC");
     while (_gpio_get_level(s_state->config.pin_vsync) == 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 30000000LL){
             goto timeout;
         }
     }
@@ -512,7 +515,7 @@ static int i2s_run()
 
     int64_t st_t = esp_timer_get_time();
     while (_gpio_get_level(s_state->config.pin_vsync) != 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 30000000LL){
             ESP_LOGE(TAG, "Timeout waiting for VSYNC");
             return -1;
         }
@@ -1452,7 +1455,7 @@ esp_err_t esp_camera_deinit()
     return ESP_OK;
 }
 
-#define FB_GET_TIMEOUT (4000 / portTICK_PERIOD_MS)
+#define FB_GET_TIMEOUT (30000 / portTICK_PERIOD_MS)
 
 camera_fb_t* esp_camera_fb_get()
 {
@@ -1471,7 +1474,7 @@ camera_fb_t* esp_camera_fb_get()
     if (s_state->config.fb_count == 1) {
         if (xSemaphoreTake(s_state->frame_ready, FB_GET_TIMEOUT) != pdTRUE){
             i2s_stop(&need_yield);
-            ESP_LOGE(TAG, "Failed to get the frame on time!");
+            ESP_LOGE(TAG, "Failed to get the frame on time! 1");
             return NULL;
         }
         return (camera_fb_t*)s_state->fb;
@@ -1480,7 +1483,7 @@ camera_fb_t* esp_camera_fb_get()
     if(s_state->fb_out) {
         if (xQueueReceive(s_state->fb_out, &fb, FB_GET_TIMEOUT) != pdTRUE) {
             i2s_stop(&need_yield);
-            ESP_LOGE(TAG, "Failed to get the frame on time!");
+            ESP_LOGE(TAG, "Failed to get the frame on time! 2");
             return NULL;
         }
     }
