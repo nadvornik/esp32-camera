@@ -416,6 +416,18 @@ static const uint8_t ov2640_settings_rgb565[][2] = {
     {0, 0},
 };
 
+static const uint8_t ov2640_settings_raw[][2] = {
+    {BANK_SEL,      BANK_SENSOR},
+    {COM10,         COM10_VSYNC_NEG},
+    {BANK_SEL,      BANK_DSP},
+    {R_BYPASS,      R_BYPASS_DSP_BYPAS},
+    {IMAGE_MODE,    IMAGE_MODE_RAW10},
+    {0xd7,          0x03},
+    {RESET,         0x00},
+    {R_BYPASS,      R_BYPASS_DSP_BYPAS},
+    {0,             0},
+};
+
 #define NUM_BRIGHTNESS_LEVELS (5)
 static const uint8_t brightness_regs[NUM_BRIGHTNESS_LEVELS + 1][5] = {
     {BPADDR, BPDATA, BPADDR, BPDATA, BPDATA },

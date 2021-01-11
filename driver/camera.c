@@ -1223,6 +1223,12 @@ esp_err_t camera_init(const camera_config_t* config)
             }
             s_state->in_bytes_per_pixel = 2;       // camera sends YU/YV
             s_state->fb_bytes_per_pixel = 2;       // frame buffer stores YU/YV/RGB565
+    } else if (pix_format == PIXFORMAT_RAW) {
+        s_state->fb_size = s_state->width * s_state->height;
+        s_state->sampling_mode = SM_0A00_0B00;
+        s_state->dma_filter = &dma_filter_grayscale;
+        s_state->in_bytes_per_pixel = 1;
+        s_state->fb_bytes_per_pixel = 1;
     } else if (pix_format == PIXFORMAT_RGB888) {
         s_state->fb_size = s_state->width * s_state->height * 3;
         if (is_hs_mode()) {

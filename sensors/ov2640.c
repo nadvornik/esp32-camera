@@ -119,6 +119,9 @@ static int set_pixformat(sensor_t *sensor, pixformat_t pixformat)
     case PIXFORMAT_GRAYSCALE:
         WRITE_REGS_OR_RETURN(ov2640_settings_yuv422);
         break;
+    case PIXFORMAT_RAW:
+        WRITE_REGS_OR_RETURN(ov2640_settings_raw);
+        break;
     case PIXFORMAT_JPEG:
         WRITE_REGS_OR_RETURN(ov2640_settings_jpeg3);
         break;
