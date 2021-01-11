@@ -352,8 +352,8 @@ static int set_aec_value(sensor_t *sensor, int value)
 {
     if(value < 0) {
         value = 0;
-    } else if(value > 1200) {
-        value = 1200;
+    } else if(value > 65535) {
+        value = 65535;
     }
     sensor->status.aec_value = value;
     return set_reg_bits(sensor, BANK_SENSOR, REG04, 0, 3, value & 0x3)
